@@ -344,17 +344,6 @@ def toggle_modal(n1, is_open):
         return not is_open
 
 
-# Pop-up perfis
-"""
-@app.callback(
-    Output("modal-perfil", "is_open"),
-    Input("botao_avatar", "n_clicks"),
-    State("modal-perfil", "is_open")
-)
-def toggle_modal(n1, is_open):
-    if n1:
-        return not is_open
-"""
 # Add/Remove categoria despesa
 @app.callback(
     [Output("category-div-add-despesa", "children"),
@@ -559,24 +548,6 @@ def abrir_cadastro_novo(n, aberto):
     if n:
         return not aberto
     return aberto
-
-
-# Salvar novo perfil
-"""
-@app.callback(
-    [Output("store-perfil", "data"),
-     Output("msg-novo-perfil", "children")],
-    Input("salvar-novo-perfil", "n_clicks"),
-    [State("novo-perfil-nome", "value"),
-     State("novo-perfil-img", "value")],
-    prevent_initial_call=True
-)
-def salvar_novo_perfil(n, nome, img):
-    if n and nome:
-        img_final = img if img else "/assets/img_plus.png"
-        return {"nome": nome, "img": img_final}, f"Perfil {nome} criado com sucesso!"
-    return dash.no_update, "Erro: forneça um nome."
-"""
 
 # Atualizar avatar no sidebar conforme perfil
 @app.callback(
