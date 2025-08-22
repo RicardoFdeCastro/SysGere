@@ -29,80 +29,89 @@ layout = dbc.Card([
                 html.P("Castro infor.", className="text-info"),
                 html.Hr(),
 
+    # Store para guardar o perfil selecionado
+    dcc.Store(id="store-perfil", data={"nome": "Homem", "img": "/assets/img_hom.png"}),
+
+    # Avatar Atual
+    dbc.Button(
+        id='botao_avatar',
+        children=[html.Img(src="/assets/img_hom.png", id="avatar_change", alt="Avatar", className='perfil_avatar')],
+        style={'background-color': 'transparent', 'border-color': 'transparent'}
+    ),
 
     # Seção PERFIL ------------------------
-                dbc.Button(id='botao_avatar',
-                    children=[html.Img(src="/assets/img_hom.png", id="avatar_change", alt="Avatar", className='perfil_avatar'),
-                ], style={'background-color': 'transparent', 'border-color': 'transparent'}),
-
-                dbc.Modal([
-                    dbc.ModalHeader(dbc.ModalTitle("Selecionar Perfil")),
-                    dbc.ModalBody([
-                        dbc.Row([
-                            dbc.Col([
-                                dbc.Card([
-                                    dbc.CardImg(src="/assets/img_hom.png", className='perfil_avatar', top=True),
-                                    dbc.CardBody([
-                                        html.H4("Perfil Homem", className="card-title"),
-                                        html.P(
-                                            "Um Card com exemplo do perfil Homem. Texto para preencher o espaço",
-                                            className="card-text",
-                                        ),
-                                        dbc.Button("Acessar", color="warning"),
-                                    ]),
-                                ]),
-                            ], width=6),
-                            dbc.Col([
-                                dbc.Card([
-                                    dbc.CardImg(src="/assets/img_fem2.png", top=True, className='perfil_avatar'),
-                                    dbc.CardBody([
-                                        html.H4("Perfil Mulher", className="card-title"),
-                                        html.P(
-                                            "Um Card com exemplo do perfil Mulher. Texto para preencher o espaço",
-                                            className="card-text",
-                                        ),
-                                        dbc.Button("Acessar", color="warning"),
-                                    ]),
-                                ]),
-                            ], width=6),
-                        ], style={"padding": "5px"}),
-                        dbc.Row([
-                            dbc.Col([
-                                dbc.Card([
-                                    dbc.CardImg(src="/assets/img_home.png", top=True, className='perfil_avatar'),
-                                    dbc.CardBody([
-                                        html.H4("Perfil Casa", className="card-title"),
-                                        html.P(
-                                            "Um Card com exemplo do perfil Casa. Texto para preencher o espaço",
-                                            className="card-text",
-                                        ),
-                                        dbc.Button("Acessar",  color="warning"),
-                                    ]),
-                                ]),
-                            ], width=6),
-                            dbc.Col([
-                                dbc.Card([
-                                    dbc.CardImg(src="/assets/img_plus.png", top=True, className='perfil_avatar'),
-                                    dbc.CardBody([
-                                        html.H4("Adicionar Novo Perfil", className="card-title"),
-                                        html.P(
-                                            "Esse projeto é um protótipo, o botão de adicionar um novo perfil esta desativado momentaneamente!",
-                                            className="card-text",
-                                        ),
-                                        dbc.Button("Adicionar", color="success"),
-                                    ]),
-                                ]),
-                            ], width=6),
-                        ], style={"padding": "5px"}),
+    dbc.Modal([
+        dbc.ModalHeader(dbc.ModalTitle("Selecionar Perfil")),
+        dbc.ModalBody([
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardImg(src="/assets/img_hom.png", className='perfil_avatar', top=True),
+                        dbc.CardBody([
+                            html.H4("Perfil Homem", className="card-title"),
+                            html.P("Perfil padrão masculino."),
+                            dbc.Button("Acessar", id="perfil-homem", color="warning"),
+                        ]),
                     ]),
-                ],
-                style={"background-color": "rgba(0, 0, 0, 0.5)"},
-                id="modal-perfil",
-                size="lg",
-                is_open=False,
-                centered=True,
-                backdrop=True
-                ),  
+                ], width=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardImg(src="/assets/img_fem2.png", top=True, className='perfil_avatar'),
+                        dbc.CardBody([
+                            html.H4("Perfil Mulher", className="card-title"),
+                            html.P("Perfil feminino."),
+                            dbc.Button("Acessar", id="perfil-mulher", color="warning"),
+                        ]),
+                    ]),
+                ], width=6),
+            ], style={"padding": "5px"}),
+
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardImg(src="/assets/img_home.png", top=True, className='perfil_avatar'),
+                        dbc.CardBody([
+                            html.H4("Perfil Casa", className="card-title"),
+                            html.P("Perfil para uso doméstico."),
+                            dbc.Button("Acessar", id="perfil-casa", color="warning"),
+                        ]),
+                    ]),
+                ], width=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardImg(src="/assets/img_plus.png", top=True, className='perfil_avatar'),
+                        dbc.CardBody([
+                            html.H4("Novo Perfil", className="card-title"),
+                            html.P("Crie um novo perfil personalizado."),
+                            dbc.Button("Criar", id="perfil-novo", color="success"),
+                        ]),
+                    ]),
+                ], width=6),
+            ], style={"padding": "5px"}),
+
+            # Modal interno para adicionar novo perfil
+            dbc.Collapse(
+                dbc.Card([
+                    dbc.CardBody([
+                        dbc.Label("Nome do perfil:"),
+                        dbc.Input(id="novo-perfil-nome", type="text", placeholder="Ex.: Trabalho"),
+                        html.Br(),
+                        dbc.Label("URL da imagem:"),
+                        dbc.Input(id="novo-perfil-img", type="text", placeholder="/assets/seu_icone.png"),
+                        html.Br(),
+                        dbc.Button("Salvar Novo Perfil", id="salvar-novo-perfil", color="primary"),
+                        html.Div(id="msg-novo-perfil", className="text-success", style={"marginTop": "10px"})
+                    ])
+                ]), id="collapse-novo-perfil"
+            ),
+        ]),
+    ],
+        id="modal-perfil",
+        size="lg",
+        is_open=False,
+        centered=True,
+        backdrop=True
+    ), 
 
     # Seção + NOVO ------------------------
             dbc.Row([
@@ -336,6 +345,7 @@ def toggle_modal(n1, is_open):
 
 
 # Pop-up perfis
+"""
 @app.callback(
     Output("modal-perfil", "is_open"),
     Input("botao_avatar", "n_clicks"),
@@ -344,7 +354,7 @@ def toggle_modal(n1, is_open):
 def toggle_modal(n1, is_open):
     if n1:
         return not is_open
-
+"""
 # Add/Remove categoria despesa
 @app.callback(
     [Output("category-div-add-despesa", "children"),
@@ -502,3 +512,76 @@ def salve_form_despesa(n, valor, switches, descricao, date, txt, dict_despesas):
 
     data_return = df_despesas.to_dict()
     return data_return
+
+# Abrir Modal Perfil
+@app.callback(
+    Output("modal-perfil", "is_open"),
+    Input("botao_avatar", "n_clicks"),
+    State("modal-perfil", "is_open")
+)
+def toggle_modal_avatar(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+
+# Seleção de perfil (Homem, Mulher, Casa)
+@app.callback(
+    Output("store-perfil", "data"),
+    [Input("perfil-homem", "n_clicks"),
+     Input("perfil-mulher", "n_clicks"),
+     Input("perfil-casa", "n_clicks")],
+    prevent_initial_call=True
+)
+def escolher_perfil(homem, mulher, casa):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        raise dash.exceptions.PreventUpdate
+
+    trigger = ctx.triggered[0]['prop_id'].split('.')[0]
+    if trigger == "perfil-homem":
+        return {"nome": "Homem", "img": "/assets/img_hom.png"}
+    elif trigger == "perfil-mulher":
+        return {"nome": "Mulher", "img": "/assets/img_fem2.png"}
+    elif trigger == "perfil-casa":
+        return {"nome": "Casa", "img": "/assets/img_home.png"}
+    return dash.no_update
+
+
+# Mostrar painel de criação de novo perfil
+@app.callback(
+    Output("collapse-novo-perfil", "is_open"),
+    Input("perfil-novo", "n_clicks"),
+    State("collapse-novo-perfil", "is_open"),
+    prevent_initial_call=True
+)
+def abrir_cadastro_novo(n, aberto):
+    if n:
+        return not aberto
+    return aberto
+
+
+# Salvar novo perfil
+"""
+@app.callback(
+    [Output("store-perfil", "data"),
+     Output("msg-novo-perfil", "children")],
+    Input("salvar-novo-perfil", "n_clicks"),
+    [State("novo-perfil-nome", "value"),
+     State("novo-perfil-img", "value")],
+    prevent_initial_call=True
+)
+def salvar_novo_perfil(n, nome, img):
+    if n and nome:
+        img_final = img if img else "/assets/img_plus.png"
+        return {"nome": nome, "img": img_final}, f"Perfil {nome} criado com sucesso!"
+    return dash.no_update, "Erro: forneça um nome."
+"""
+
+# Atualizar avatar no sidebar conforme perfil
+@app.callback(
+    Output("avatar_change", "src"),
+    Input("store-perfil", "data")
+)
+def atualizar_avatar(data):
+    return data["img"]
